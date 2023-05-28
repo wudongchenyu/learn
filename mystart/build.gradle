@@ -1,0 +1,45 @@
+plugins {
+	id 'java'
+	id 'maven-publish'
+}
+
+group = 'pers.wdcy'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '17'
+
+repositories {
+	maven{ url "https://maven.aliyun.com/repository/public/"}
+	maven{ url "https://repo.spring.io/milestone"}
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-autoconfigure:2.7.12'
+	implementation 'org.springframework:spring-context:5.3.27'
+	compileOnly 'org.projectlombok:lombok:1.18.26'
+	annotationProcessor 'org.projectlombok:lombok:1.18.26'
+}
+
+task sourceJar(type: Jar) {
+    from sourceSets.main.allJava
+    classifier "sources"
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+           groupId project.group
+           artifactId project.name
+           version project.version
+
+           from components.java
+           artifact sourceJar
+        }
+    }
+    repositories {
+		mavenLocal()
+    }
+}
+tasks.withType(JavaCompile) {  
+    options.encoding = "UTF-8"  
+}
